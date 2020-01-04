@@ -22,13 +22,16 @@ class App extends React.Component {
         });
     };
     addTask = (newText) => {
-        let newTask = {
-            title: newText,
-            isDone: true,
-            priority: 'low'
-        };
-        let newTasks = [...this.state.tasks, newTask];
-        this.setState({tasks: newTasks});
+        if (newText !== "") {
+
+            let newTask = {
+                title: newText,
+                isDone: false,
+                priority: 'low'
+            };
+            let newTasks = [...this.state.tasks, newTask];
+            this.setState({tasks: newTasks});
+        }
     };
 
     changeStatus = (status, task) => {
