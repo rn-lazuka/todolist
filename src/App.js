@@ -3,6 +3,7 @@ import './App.css';
 import AddNewItemForm from "./AddNewItemForm";
 import ConnectedToDoList from "./ToDoList";
 import {connect} from "react-redux";
+import {addToDoListAC} from "./reducer";
 
 
 class App extends React.Component {
@@ -39,11 +40,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         addToDoList: (newToDoList)=>{
-            const action = {
-                type: "ADD-TODOLIST",
-                newToDoList: newToDoList
-            };
-            dispatch(action)
+            dispatch(addToDoListAC(newToDoList))
         }
     }
 };
