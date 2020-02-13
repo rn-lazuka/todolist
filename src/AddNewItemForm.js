@@ -14,10 +14,9 @@ class AddNewItemForm extends React.Component {
         if (newText === "") {
             this.setState({error: true})
         } else {
-            this.setState({error: false})
-
+            this.setState({error: false});
+            this.props.addTask(newText);
         }
-        this.props.addItem(newText);
     };
     onEnterPress = (e) => {
         if (e.key === 'Enter') {
