@@ -5,6 +5,7 @@ import ConnectedToDoList from "./ToDoList";
 import {connect} from "react-redux";
 import {addToDoListAC, setTodoListsAC} from "./reducer";
 import axios from "axios";
+import {api} from "./api";
 
 
 class App extends React.Component {
@@ -13,18 +14,14 @@ class App extends React.Component {
        this.restoreState();
    }
     restoreState = () => {
-        axios.get("https://social-network.samuraijs.com/api/1.1/todo-lists",
-            {withCredentials: true, "API-KEY":"6d54c1cb-0079-4662-b13d-27d4ae8cf67d"})
-            .then(res => {
+            api.getToDoLists().then(res => {
                 this.props.setTodoLists(res.data)
             });
     };
 
 
     addToDoList = (title) => {
-        axios.post("https://social-network.samuraijs.com/api/1.1/todo-lists", {title:title},
-            {withCredentials: true,  headers:{"API-KEY": "6d54c1cb-0079-4662-b13d-27d4ae8cf67d"}})
-            .then(res => {
+            api.addToDoList(title).then(res => {
                 this.props.addToDoList(res.data.data.item)
             });
     };
