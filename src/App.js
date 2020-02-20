@@ -3,27 +3,17 @@ import './App.css';
 import AddNewItemForm from "./AddNewItemForm";
 import ConnectedToDoList from "./ToDoList";
 import {connect} from "react-redux";
-import {addToDoListAC, setTodoListsAC} from "./reducer";
-import axios from "axios";
-import {api} from "./api";
+import {addToDoList, setTodoLists} from "./reducer";
 
 
 class App extends React.Component {
 
    componentDidMount() {
-       this.restoreState();
+       this.props.setTodoLists()
    }
-    restoreState = () => {
-            api.getToDoLists().then(res => {
-                this.props.setTodoLists(res.data)
-            });
-    };
-
 
     addToDoList = (title) => {
-            api.addToDoList(title).then(res => {
-                this.props.addToDoList(res.data.data.item)
-            });
+        this.props.addToDoList(title)
     };
 
     render = () => {
@@ -47,16 +37,7 @@ const mapStateToProps = (state) => {
         toDoList: state.todolists
     }
 };
-const mapDispatchToProps = (dispatch) => {
-    return {
-        addToDoList: (newToDoList)=>{
-            dispatch(addToDoListAC(newToDoList))
-        },
-        setTodoLists: (todolists)=>{
-            dispatch(setTodoListsAC(todolists))
-        }
-    }
-};
-const ConnectedApp = connect(mapStateToProps,mapDispatchToProps)(App);
+
+const ConnectedApp = connect(mapStateToProps,{setTodoLists,addToDoList})(App);
 export default ConnectedApp;
 
