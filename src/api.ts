@@ -1,4 +1,4 @@
-import * as axios from "axios";
+import  axios from "axios";
 
 
 const instance = axios.create({
@@ -9,28 +9,28 @@ const instance = axios.create({
 
 export const api = {
     getToDoLists() {
-        return instance.get()
+        return instance.get("")
     },
-    addToDoList(title) {
+    addToDoList(title:string) {
         return instance.post("", {title: title},
         )
     },
-    getTasks(todolistId) {
+    getTasks(todolistId:string) {
         return instance.get(`/${todolistId}/tasks`)
     },
-    deleteToDoList(todolistId) {
+    deleteToDoList(todolistId:string) {
         return instance.delete(`/${todolistId}`)
     },
-    addTask(todolistId,newText) {
+    addTask(todolistId:string,newText:string) {
         return instance.post(`/${todolistId}/tasks`, {title: newText})
     },
-    deleteTask(todolistId, taskId) {
+    deleteTask(todolistId:string, taskId:string) {
         return instance.delete(`/${todolistId}/tasks/${taskId}`)
     },
-    changeTask (todolistId,taskId,newTask){
+    changeTask (todolistId:string,taskId:string,newTask:any){
         return instance.put(`/${todolistId}/tasks/${taskId}`, newTask)
     },
-    changeToDoListTitle (todolistId,title){
+    changeToDoListTitle (todolistId:string,title:string){
         return instance.put(`/${todolistId}/`, title)
     }
 

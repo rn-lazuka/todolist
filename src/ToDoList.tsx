@@ -14,8 +14,18 @@ import {
     deleteTask
 } from "./reducer";
 
-
-class ToDoList extends React.Component {
+interface IProps {
+    id:string
+    title:string
+    tasks:Array<any>
+    setTasks:Function
+    addNewTask:Function
+    changeTask:Function
+    changeToDoListTitle:Function
+    deleteToDoList:Function
+    deleteTask:Function
+}
+class ToDoList extends React.Component<IProps> {
     nextTaskId = 0;
     state = {
         filterValue: "All",
@@ -26,38 +36,38 @@ class ToDoList extends React.Component {
         this.restoreState()
     }
 
-    restoreState = () => {
+    restoreState:any = () => {
         const todolistId = this.props.id;
         this.props.setTasks(todolistId);
     };
 
-    changeFilter = (newFilterValue) => {
+    changeFilter = (newFilterValue:string) => {
         this.setState({
             filterValue: newFilterValue
         });
     };
 
-    addTask = (newText) => {
+    addTask = (newText:string) => {
         const todolistId = this.props.id;
         this.props.addNewTask(newText, todolistId)
     };
 
-    changeTask = (task, newTask) => {
+    changeTask = (task:any, newTask:any) => {
         const todolistId = this.props.id;
         this.props.changeTask(task, newTask, todolistId);
     };
 
-    changeStatus = (task, status) => {
-        let newTask = {...task, status: status};
+    changeStatus = (task:any, status:number) => {
+        let newTask:any = {...task, status: status};
         this.changeTask(task, newTask);
     };
 
-    changeTitle = (task, title) => {
+    changeTitle = (task:any, title:string) => {
         let newTask = {...task, title: title};
         this.changeTask(task, newTask)
     };
 
-    changeToDoListTitle = (title) => {
+    changeToDoListTitle = (title:string) => {
         const todolistId = this.props.id;
         this.props.changeToDoListTitle(todolistId, title);
     };
@@ -67,7 +77,7 @@ class ToDoList extends React.Component {
         this.props.deleteToDoList(todolistId);
     };
 
-    deleteTask = (taskId) => {
+    deleteTask = (taskId:string) => {
         const todolistId = this.props.id;
         this.props.deleteTask(todolistId, taskId);
     };
@@ -106,7 +116,7 @@ class ToDoList extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state:any) => {
     return {
         toDoList: state.todolists
     }

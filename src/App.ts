@@ -5,19 +5,23 @@ import ConnectedToDoList from "./ToDoList";
 import {connect} from "react-redux";
 import {addToDoList, setTodoLists} from "./reducer";
 
-
-class App extends React.Component {
+interface IProps {
+    setTodoLists:Function
+    addToDoList:Function
+    toDoList:Array<any>
+}
+class App extends React.Component<IProps> {
 
    componentDidMount() {
        this.props.setTodoLists()
    }
 
-    addToDoList = (title) => {
+    addToDoList = (title:string) => {
         this.props.addToDoList(title)
     };
 
     render = () => {
-        const todolists = this.props.toDoList.map(t => <ConnectedToDoList id={t.id} title={t.title} tasks={t.tasks}/>);
+        const todolists = this.props.toDoList.map((t:any) => <ConnectedToDoList id={t.id} title={t.title} tasks={t.tasks}/>);
         return (
             <>
                 <div>
@@ -32,7 +36,7 @@ class App extends React.Component {
 }
 
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state:any) => {
     return {
         toDoList: state.todolists
     }
