@@ -3,12 +3,11 @@ import './App.css';
 
 interface IProps {
     addTask:Function
-    title:string
 }
 
 class AddNewItemForm extends React.Component<IProps> {
     state = {error: false,
-    title: this.props.title};
+    title: ""};
 
     onChangingValue = (e:ChangeEvent<HTMLInputElement>) => {
         this.setState({error: false,title:e.currentTarget.value})
@@ -32,7 +31,6 @@ class AddNewItemForm extends React.Component<IProps> {
         let classForInput = this.state.error ? "error" : "";
         return (
             <div className="todoList-header">
-                <h3 className="todoList-header__title">{this.state.title}</h3>
                 <div className="todoList-newTaskForm">
                     <input onKeyPress={this.onEnterPress} onChange={this.onChangingValue} className={classForInput}
                      value={this.state.title}  type="text" placeholder="New item name" />

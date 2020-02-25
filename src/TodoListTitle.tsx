@@ -1,16 +1,24 @@
-import React from 'react';
+import React, {ChangeEvent} from 'react';
 import './App.css';
 
-class TodoListTitle extends React.Component {
+interface IProps {
+    changeToDoListTitle:(title:string)=>void
+    deleteToDoList:()=>void
+    title:string
+}
+
+
+class TodoListTitle extends React.Component<IProps> {
     state = {
         title: this.props.title,
-        editMode: false
+        editMode: false,
+        classForInput:""
     };
-    activateEditMode = () => {
-        this.setState({editMode: true})
+    activateEditMode = ():void => {
+        this.setState({editMode: true,title:this.props.title})
     };
 
-    deactivateEditMode = () => {
+    deactivateEditMode = ():void => {
         if (this.state.title !== "") {
             this.props.changeToDoListTitle(this.state.title);
             this.setState({editMode: false});
@@ -19,7 +27,7 @@ class TodoListTitle extends React.Component {
         }
     };
 
-    onTitleChanged = (e) => {
+    onTitleChanged = (e:ChangeEvent<HTMLInputElement>):void => {
         let newTitle = e.currentTarget.value;
         this.setState({title: newTitle});
     };
@@ -29,7 +37,7 @@ class TodoListTitle extends React.Component {
                 {this.state.editMode
                     ? <input className={this.state.classForInput} onChange={this.onTitleChanged}
                              onBlur={this.deactivateEditMode} autoFocus={true} value={this.state.title}/> :
-                    <h3 className="todoList-header__title" onClick={this.activateEditMode}>{this.state.title}
+                    <h3 className="todoList-header__title" onClick={this.activateEditMode}>{this.props.title}
                     </h3>
                }  <button onClick={this.props.deleteToDoList}>X</button>
             </div>

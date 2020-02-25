@@ -22,7 +22,10 @@ export const api = {
         return instance.delete(`/${todolistId}`)
     },
     addTask(todolistId:string,newText:string) {
-        return instance.post(`/${todolistId}/tasks`, {title: newText})
+        return instance.post(`/${todolistId}/tasks`, {title: newText}).
+        then(res => {
+            return res.data.data.item
+        })
     },
     deleteTask(todolistId:string, taskId:string) {
         return instance.delete(`/${todolistId}/tasks/${taskId}`)
@@ -31,7 +34,6 @@ export const api = {
         return instance.put(`/${todolistId}/tasks/${taskId}`, newTask)
     },
     changeToDoListTitle (todolistId:string,title:string){
-        return instance.put(`/${todolistId}/`, title)
+        return instance.put(`/${todolistId}/`, {title})
     }
-
 };

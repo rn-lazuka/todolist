@@ -1,4 +1,5 @@
-import {api} from "./api";
+import {api} from "../api";
+import {ITask} from "../entities/entities";
 
 export const ADD_TODOLIST = "TODOLIST/REDUCER/ADD_TODOLIST";
 export const ADD_TASK = "TODOLIST/REDUCER/ADD_TASK";
@@ -116,6 +117,7 @@ export const reducer = (state = initialState, action:any) => {
                 )
             };
         case DELETE_TODOLIST:
+            let st =  state.todolists.filter((tl:any) => tl.id !== action.todolistId)
             return {
                 ...state,
                 todolists: state.todolists.filter((tl:any) => tl.id !== action.todolistId)
@@ -127,9 +129,10 @@ export const reducer = (state = initialState, action:any) => {
 
 export const addToDoListAC = (newToDoList:any) => ({type: ADD_TODOLIST, newToDoList});
 export const setTodoListsAC = (todolists:Array<any>) => ({type: SET_TODOLISTS, todolists});
-export const setTaskAC = (tasks:Array<any>, todolistId:string) => ({type: SET_TASKS, tasks, todolistId});
-export const addNewTaskAC = (newTask:object, todolistId:string) => ({type: ADD_TASK, newTask, todolistId});
-export const changeTaskAC = (newTask:object, todolistId:string) => ({type: CHANGE_TASK, newTask, todolistId});
+export const setTaskAC = (tasks:Array<ITask>, todolistId:string) => ({type: SET_TASKS, tasks, todolistId});
+export const addNewTaskAC = (newTask:ITask, todolistId:string) => ({type: ADD_TASK, newTask, todolistId});
+
+export const changeTaskAC = (newTask:ITask, todolistId:string) => ({type: CHANGE_TASK, newTask, todolistId});
 export const deleteToDoListAC = (todolistId:string) => ({type: DELETE_TODOLIST, todolistId});
 export const deleteTaskAC = (todolistId:string, taskId:string) => ({type: DELETE_TASK, todolistId, taskId});
 export const changeToDoListTitleAC = (todolistId:string, title:string) => ({type: CHANGE_TODOLIST_TITLE, todolistId, title});
@@ -146,7 +149,7 @@ export const setTodoLists = () => {
 export const setTasks = (todolistId:string) => {
     return (dispatch:Function) => {
         api.getTasks(todolistId).then((res:any) => {
-            const tasks:Array<object> = res.data.items;
+            const tasks:Array<ITask> = res.data.items;
             dispatch(setTaskAC(tasks, todolistId))
         });
 }};
@@ -160,13 +163,12 @@ export const addToDoList = (title:string) => {
 export const addNewTask = (newText:string,todolistId:string) => {
     return (dispatch:Function) => {
         api.addTask(todolistId, newText)
-            .then((res:any) => {
-                const task:object = res.data.data.item;
+            .then((task:ITask) => {
                dispatch(addNewTaskAC(task, todolistId))
     });
 }};
 
-export const changeTask = (task:any, newTask:object, todolistId:string) => {
+export const changeTask = (task:any, newTask:ITask, todolistId:string) => {
     return (dispatch:Function) => {
         api.changeTask(todolistId, task.id, newTask)
             .then((res:any) => {

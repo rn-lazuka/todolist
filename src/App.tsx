@@ -3,7 +3,7 @@ import './App.css';
 import AddNewItemForm from "./AddNewItemForm";
 import ConnectedToDoList from "./ToDoList";
 import {connect} from "react-redux";
-import {addToDoList, setTodoLists} from "./reducer";
+import {addToDoList, setTodoLists} from "./store/reducer";
 
 interface IProps {
     setTodoLists:Function
@@ -16,7 +16,7 @@ class App extends React.Component<IProps> {
        this.props.setTodoLists()
    }
 
-    addToDoList = (title:string) => {
+    addToDoList = (title:string):void => {
         this.props.addToDoList(title)
     };
 

@@ -1,15 +1,22 @@
-import React from 'react';
+import React, {ChangeEvent} from 'react';
 import './App.css';
 
-class TodoListTask extends React.Component {
+interface IProps {
+    deleteTask:Function
+    changeTitle:Function
+    changeStatus:Function
+    task:any
+}
+
+class TodoListTask extends React.Component<IProps> {
     state ={editMode:false,
         title:this.props.task.title,
         classForInput:""
     };
-    activateEditMode =()=>{
-     this.setState({editMode:true})
+    activateEditMode =():void=>{
+     this.setState({editMode:true,title:this.props.task.title})
     };
-    deactivateEditMode =()=>{
+    deactivateEditMode =():void=>{
         if(this.state.title!=="") {
             this.props.changeTitle(this.props.task, this.state.title);
             this.setState({editMode: false});
@@ -18,16 +25,16 @@ class TodoListTask extends React.Component {
         }
     };
 
-    onTitleChanged =(e)=>{
+    onTitleChanged =(e:ChangeEvent<HTMLInputElement>):void=>{
         let newTitle =  e.currentTarget.value;
         this.setState({title:newTitle});
     };
 
-    onIsDoneChanged = (e) => {
+    onIsDoneChanged = (e:ChangeEvent<HTMLInputElement>):void => {
         let status = e.currentTarget.checked ? 2 : 0;
         this.props.changeStatus(this.props.task,status )
     };
-    deleteTask=()=>{
+    deleteTask=():void=>{
         this.props.deleteTask(this.props.task.id)
     };
     render = () => {
