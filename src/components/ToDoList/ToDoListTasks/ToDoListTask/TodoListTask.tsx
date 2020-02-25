@@ -1,14 +1,20 @@
 import React, {ChangeEvent} from 'react';
-import './App.css';
+import '../../../../App.css';
+import {ITask} from '../../../../entities/entities';
 
 interface IProps {
-    deleteTask:Function
-    changeTitle:Function
-    changeStatus:Function
-    task:any
+    deleteTask:(id:string)=>void
+    changeTitle:(task:ITask, title:string)=>void
+    changeStatus:(task:ITask,status:number)=>void
+    task:ITask
+}
+interface IState {
+    editMode:boolean,
+    title:string
+    classForInput:string
 }
 
-class TodoListTask extends React.Component<IProps> {
+class TodoListTask extends React.Component<IProps,IState> {
     state ={editMode:false,
         title:this.props.task.title,
         classForInput:""
@@ -32,7 +38,7 @@ class TodoListTask extends React.Component<IProps> {
 
     onIsDoneChanged = (e:ChangeEvent<HTMLInputElement>):void => {
         let status = e.currentTarget.checked ? 2 : 0;
-        this.props.changeStatus(this.props.task,status )
+        this.props.changeStatus(this.props.task,status)
     };
     deleteTask=():void=>{
         this.props.deleteTask(this.props.task.id)

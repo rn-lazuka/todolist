@@ -1,28 +1,37 @@
 .App {
-display: flex;
-  flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
-.todoList-header{
 
+.todoList-header {
+    display: flex;
+    flex-direction: row;
+    height: max-content;
+    align-items: center;
+    justify-content: start;
 }
+
 .todoList {
-  width: 300px;
-  margin: 0 auto;
+    width: 300px;
+    margin: 0 auto;
 }
 
 .todoList > div {
-  padding: 10px;
+    padding: 10px;
 }
 
 .todoList-task {
 
 }
+
 .filter-active {
-  background-color: blue;
+    background-color: blue;
 }
+
 .error {
-  border-color: red;
+    border-color: red;
 }
+
 .todoList-task.done {
-  opacity: 0.5;
+    opacity: 0.5;
 }

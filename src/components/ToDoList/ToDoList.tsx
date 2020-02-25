@@ -1,9 +1,9 @@
 import React from 'react';
-import './App.css';
+import '../../App.css';
 import AddNewItemForm from "./AddNewItemForm";
-import TodoListTasks from "./TodoListTasks";
-import TodoListFooter from "./TodoListFooter";
-import TodoListTitle from "./TodoListTitle";
+import TodoListTasks from "./ToDoListTasks/TodoListTasks";
+import TodoListFooter from "./ToDoListFooter/TodoListFooter";
+import TodoListTitle from "./TodoListTitle/TodoListTitle";
 import {connect} from "react-redux";
 import {
     changeToDoListTitle,
@@ -12,27 +12,33 @@ import {
     deleteToDoList,
     changeTask,
     deleteTask
-} from "./store/reducer";
+} from "../../store/reducer";
+import {ITask} from "../../entities/entities";
 
 interface IProps {
     id:string
     title:string
-    tasks:Array<any>
-    setTasks:Function
-    addNewTask:Function
-    changeTask:Function
-    changeToDoListTitle:Function
+    tasks:Array<ITask>
+    setTasks:(todolistId:string)=>void
+    addNewTask:(newText:string, todolistId:string)=>void
+    changeTask:(task:ITask, newTask:ITask, todolistId:string)=>void
+    changeToDoListTitle:(todolistId:string, title:string)=>void
     deleteToDoList:(id:string)=>void
-    deleteTask:Function
+    deleteTask:(todolistId:string, taskId:string)=>void
 }
-class ToDoList extends React.Component<IProps> {
-    nextTaskId = 0;
+interface IState {
+    filterValue: string
+    tasks: Array<ITask>
+}
+
+class ToDoList extends React.Component<IProps,IState> {
+
     state = {
         filterValue: "All",
         tasks: []
     };
 
-    componentDidMount() {
+    componentDidMount(): void {
         this.restoreState()
     }
 
@@ -52,17 +58,17 @@ class ToDoList extends React.Component<IProps> {
         this.props.addNewTask(newText, todolistId)
     };
 
-    changeTask = (task:any, newTask:any):void  => {
+    changeTask = (task:ITask, newTask:ITask):void  => {
         const todolistId = this.props.id;
         this.props.changeTask(task, newTask, todolistId);
     };
 
-    changeStatus = (task:any, status:number):void  => {
-        let newTask:any = {...task, status: status};
+    changeStatus = (task:ITask, status:number):void  => {
+        let newTask:ITask = {...task, status: status};
         this.changeTask(task, newTask);
     };
 
-    changeTitle = (task:any, title:string):void  => {
+    changeTitle = (task:ITask, title:string):void  => {
         let newTask = {...task, title: title};
         this.changeTask(task, newTask)
     };
@@ -87,7 +93,7 @@ class ToDoList extends React.Component<IProps> {
         return (
             <div className="App">
                 <div className="todoList">
-                    <div className={'todoList-header'}>
+                    <div>
                         <TodoListTitle changeToDoListTitle={this.changeToDoListTitle}
                                        deleteToDoList={this.deleteToDoList} title={this.props.title}/>
                         <AddNewItemForm addTask={this.addTask}/>
@@ -96,7 +102,7 @@ class ToDoList extends React.Component<IProps> {
                     <TodoListTasks changeTitle={this.changeTitle}
                                    deleteTask={this.deleteTask}
                                    changeStatus={this.changeStatus}
-                                   tasks={tasks.filter((t:any) => {
+                                   tasks={tasks.filter((t:ITask) => {
                                        switch (this.state.filterValue) {
                                            case "All":
                                                return true;

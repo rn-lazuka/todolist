@@ -11,3 +11,11 @@ export interface ITask {
     deadline: null | string
     addedDate: string
 }
+
+export interface ITodoList {
+    id: string
+    title: string
+    addedDate?: string
+    order?: number
+    tasks:Array<ITask>
+}

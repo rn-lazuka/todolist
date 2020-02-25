@@ -1,12 +1,15 @@
 import React from 'react';
-import './App.css';
+import '../../../App.css';
 
 interface IProps {
-    changeFilter:Function
+    changeFilter:(string:string)=>void
     filterValue:string
 }
+interface IState {
+    isHidden: boolean
+}
 
-class TodoListFooter extends React.Component<IProps> {
+class TodoListFooter extends React.Component<IProps,IState> {
     state = {
         isHidden: false
     };

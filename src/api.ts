@@ -1,4 +1,5 @@
-import  axios from "axios";
+import axios from "axios";
+import {ITask} from "./entities/entities";
 
 
 const instance = axios.create({
@@ -9,31 +10,45 @@ const instance = axios.create({
 
 export const api = {
     getToDoLists() {
-        return instance.get("")
+        return instance.get("").then(res => {
+            return res.data
+        })
     },
-    addToDoList(title:string) {
-        return instance.post("", {title: title},
+    addToDoList(title: string) {
+        return instance.post("", {title: title}).then(
+            res => {
+                return res.data.data.item
+            }
         )
     },
-    getTasks(todolistId:string) {
-        return instance.get(`/${todolistId}/tasks`)
+    getTasks(todolistId: string) {
+        return instance.get(`/${todolistId}/tasks`).then(
+            res => {
+                return res.data.items
+            }
+        )
     },
-    deleteToDoList(todolistId:string) {
+    deleteToDoList(todolistId: string) {
         return instance.delete(`/${todolistId}`)
     },
-    addTask(todolistId:string,newText:string) {
-        return instance.post(`/${todolistId}/tasks`, {title: newText}).
-        then(res => {
+    addTask(todolistId: string, newText: string) {
+        return instance.post(`/${todolistId}/tasks`, {title: newText}).then(res => {
             return res.data.data.item
         })
     },
-    deleteTask(todolistId:string, taskId:string) {
+    deleteTask(todolistId: string, taskId: string) {
         return instance.delete(`/${todolistId}/tasks/${taskId}`)
     },
-    changeTask (todolistId:string,taskId:string,newTask:any){
-        return instance.put(`/${todolistId}/tasks/${taskId}`, newTask)
+    changeTask(todolistId: string, taskId: string, newTask: ITask) {
+        return instance.put(`/${todolistId}/tasks/${taskId}`, newTask).then(
+            res => {
+                if (res.data.resultCode === 0) {
+                    return res.data.data.item
+                }
+            }
+        )
     },
-    changeToDoListTitle (todolistId:string,title:string){
+    changeToDoListTitle(todolistId: string, title: string) {
         return instance.put(`/${todolistId}/`, {title})
     }
 };
