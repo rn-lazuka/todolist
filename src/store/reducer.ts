@@ -11,12 +11,16 @@ export const SET_TASKS = "TODOLIST/REDUCER/SET_TASKS";
 export const CHANGE_TODOLIST_TITLE = "TODOLIST/REDUCER/CHANGE_TODOLIST_TITLE";
 
 
+interface IInitialState {
+    todolists: Array<ITodoList>
+}
+
 const initialState = {
     todolists: []
 };
 
 
-export const reducer = (state = initialState, action: any) => {
+export const reducer = (state: IInitialState = initialState, action: TodoListReducerActionTypes): IInitialState => {
     switch (action.type) {
         case ADD_TODOLIST:
             return {
@@ -109,15 +113,79 @@ export const reducer = (state = initialState, action: any) => {
     }
 };
 
-export const addToDoListAC = (newToDoList: ITodoList) => ({type: ADD_TODOLIST, newToDoList});
-export const setTodoListsAC = (todolists: Array<ITodoList>) => ({type: SET_TODOLISTS, todolists});
-export const setTaskAC = (tasks: Array<ITask>, todolistId: string) => ({type: SET_TASKS, tasks, todolistId});
-export const addNewTaskAC = (newTask: ITask, todolistId: string) => ({type: ADD_TASK, newTask, todolistId});
+interface IAddToDoListAC {
+    type: typeof ADD_TODOLIST
+    newToDoList: ITodoList
+}
 
-export const changeTaskAC = (newTask: ITask, todolistId: string) => ({type: CHANGE_TASK, newTask, todolistId});
-export const deleteToDoListAC = (todolistId: string) => ({type: DELETE_TODOLIST, todolistId});
-export const deleteTaskAC = (todolistId: string, taskId: string) => ({type: DELETE_TASK, todolistId, taskId});
-export const changeToDoListTitleAC = (todolistId: string, title: string) => ({
+interface ISetTodoListsAC {
+    type: typeof SET_TODOLISTS
+    todolists: Array<ITodoList>
+}
+
+interface ISetTaskAC {
+    type: typeof SET_TASKS
+    tasks: Array<ITask>
+    todolistId: string
+}
+
+interface IAddNewTaskAC {
+    type: typeof ADD_TASK
+    newTask: ITask
+    todolistId: string
+}
+
+interface IChangeTaskAC {
+    type: typeof CHANGE_TASK
+    newTask: ITask
+    todolistId: string
+}
+
+interface IDeleteToDoListAC {
+    type: typeof DELETE_TODOLIST
+    todolistId: string
+}
+
+interface IDeleteTaskAC {
+    type: typeof DELETE_TASK
+    todolistId: string
+    taskId: string
+}
+
+interface IChangeToDoListTitleAC {
+    type: typeof CHANGE_TODOLIST_TITLE
+    todolistId: string
+    title: string
+}
+
+type TodoListReducerActionTypes = IAddToDoListAC | ISetTodoListsAC | ISetTaskAC | IAddNewTaskAC
+    | IChangeTaskAC | IDeleteToDoListAC | IDeleteTaskAC | IChangeToDoListTitleAC;
+
+
+export const addToDoListAC = (newToDoList: ITodoList): IAddToDoListAC => ({type: ADD_TODOLIST, newToDoList});
+export const setTodoListsAC = (todolists: Array<ITodoList>): ISetTodoListsAC => ({type: SET_TODOLISTS, todolists});
+export const setTaskAC = (tasks: Array<ITask>, todolistId: string): ISetTaskAC => ({
+    type: SET_TASKS,
+    tasks,
+    todolistId
+});
+export const addNewTaskAC = (newTask: ITask, todolistId: string): IAddNewTaskAC => ({
+    type: ADD_TASK,
+    newTask,
+    todolistId
+});
+export const changeTaskAC = (newTask: ITask, todolistId: string): IChangeTaskAC => ({
+    type: CHANGE_TASK,
+    newTask,
+    todolistId
+});
+export const deleteToDoListAC = (todolistId: string): IDeleteToDoListAC => ({type: DELETE_TODOLIST, todolistId});
+export const deleteTaskAC = (todolistId: string, taskId: string): IDeleteTaskAC => ({
+    type: DELETE_TASK,
+    todolistId,
+    taskId
+});
+export const changeToDoListTitleAC = (todolistId: string, title: string): IChangeToDoListTitleAC => ({
     type: CHANGE_TODOLIST_TITLE,
     todolistId,
     title
@@ -131,7 +199,6 @@ export const setTodoLists = () => {
         });
     }
 };
-
 
 export const setTasks = (todolistId: string) => {
     return (dispatch: Function) => {
@@ -148,6 +215,7 @@ export const addToDoList = (title: string) => {
         });
     }
 };
+
 export const addNewTask = (newText: string, todolistId: string) => {
     return (dispatch: Function) => {
         api.addTask(todolistId, newText)

@@ -5,15 +5,19 @@ import ConnectedToDoList from "./components/ToDoList/ToDoList";
 import {connect} from "react-redux";
 import {addToDoList, setTodoLists} from "./store/reducer";
 import {ITodoList} from "./entities/entities";
+import {AppStateType} from './store/store';
 
-interface IProps {
-    setTodoLists: () => void
-    addToDoList: (title: string) => void
+interface IMSTP {
     toDoLists: Array<ITodoList>
 }
 
+interface IMDTP {
+    setTodoLists: () => void
+    addToDoList: (title: string) => void
+}
 
-class App extends React.Component<IProps> {
+
+class App extends React.Component<IMSTP & IMDTP> {
 
     componentDidMount(): void {
         this.props.setTodoLists()
@@ -24,7 +28,8 @@ class App extends React.Component<IProps> {
     };
 
     render = () => {
-        const todolists = this.props.toDoLists.map((t: ITodoList) => <ConnectedToDoList key={t.id} id={t.id} title={t.title}
+        const todolists = this.props.toDoLists.map((t: ITodoList) => <ConnectedToDoList key={t.id} id={t.id}
+                                                                                        title={t.title}
                                                                                         tasks={t.tasks}/>);
         return (
             <>
@@ -40,9 +45,9 @@ class App extends React.Component<IProps> {
 }
 
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: AppStateType): IMSTP => {
     return {
-        toDoLists: state.todolists
+        toDoLists: state.todolists.todolists
     }
 };
 

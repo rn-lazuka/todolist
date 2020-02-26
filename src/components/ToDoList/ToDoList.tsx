@@ -13,25 +13,35 @@ import {
     changeTask,
     deleteTask
 } from "../../store/reducer";
-import {ITask} from "../../entities/entities";
+import {ITask, ITodoList} from "../../entities/entities";
+import {AppStateType} from '../../store/store';
 
 interface IProps {
-    id:string
-    title:string
-    tasks:Array<ITask>
-    setTasks:(todolistId:string)=>void
-    addNewTask:(newText:string, todolistId:string)=>void
-    changeTask:(task:ITask, newTask:ITask, todolistId:string)=>void
-    changeToDoListTitle:(todolistId:string, title:string)=>void
-    deleteToDoList:(id:string)=>void
-    deleteTask:(todolistId:string, taskId:string)=>void
-}
-interface IState {
-    filterValue: string
+    id: string
+    title: string
     tasks: Array<ITask>
+
 }
 
-class ToDoList extends React.Component<IProps,IState> {
+interface IMSTP {
+    toDoLists: Array<ITodoList>
+}
+
+interface IMDTP {
+    setTasks: (todolistId: string) => void
+    addNewTask: (newText: string, todolistId: string) => void
+    changeTask: (task: ITask, newTask: ITask, todolistId: string) => void
+    changeToDoListTitle: (todolistId: string, title: string) => void
+    deleteToDoList: (id: string) => void
+    deleteTask: (todolistId: string, taskId: string) => void
+}
+
+interface IState {
+    filterValue: string
+    tasks: Array<ITask>|null
+}
+
+class ToDoList extends React.Component<IProps & IMSTP & IMDTP, IState> {
 
     state = {
         filterValue: "All",
@@ -42,48 +52,48 @@ class ToDoList extends React.Component<IProps,IState> {
         this.restoreState()
     }
 
-    restoreState:any = ():void  => {
+    restoreState: any = (): void => {
         const todolistId = this.props.id;
         this.props.setTasks(todolistId);
     };
 
-    changeFilter = (newFilterValue:string):void  => {
+    changeFilter = (newFilterValue: string): void => {
         this.setState({
             filterValue: newFilterValue
         });
     };
 
-    addTask = (newText:string):void  => {
+    addTask = (newText: string): void => {
         const todolistId = this.props.id;
         this.props.addNewTask(newText, todolistId)
     };
 
-    changeTask = (task:ITask, newTask:ITask):void  => {
+    changeTask = (task: ITask, newTask: ITask): void => {
         const todolistId = this.props.id;
         this.props.changeTask(task, newTask, todolistId);
     };
 
-    changeStatus = (task:ITask, status:number):void  => {
-        let newTask:ITask = {...task, status: status};
+    changeStatus = (task: ITask, status: number): void => {
+        let newTask: ITask = {...task, status: status};
         this.changeTask(task, newTask);
     };
 
-    changeTitle = (task:ITask, title:string):void  => {
+    changeTitle = (task: ITask, title: string): void => {
         let newTask = {...task, title: title};
         this.changeTask(task, newTask)
     };
 
-    changeToDoListTitle = (title:string):void  => {
+    changeToDoListTitle = (title: string): void => {
         const todolistId = this.props.id;
         this.props.changeToDoListTitle(todolistId, title);
     };
 
-    deleteToDoList = ():void => {
+    deleteToDoList = (): void => {
         const todolistId = this.props.id;
         this.props.deleteToDoList(todolistId);
     };
 
-    deleteTask = (taskId:string):void  => {
+    deleteTask = (taskId: string): void => {
         const todolistId = this.props.id;
         this.props.deleteTask(todolistId, taskId);
     };
@@ -102,7 +112,7 @@ class ToDoList extends React.Component<IProps,IState> {
                     <TodoListTasks changeTitle={this.changeTitle}
                                    deleteTask={this.deleteTask}
                                    changeStatus={this.changeStatus}
-                                   tasks={tasks.filter((t:ITask) => {
+                                   tasks={tasks.filter((t: ITask) => {
                                        switch (this.state.filterValue) {
                                            case "All":
                                                return true;
@@ -122,11 +132,18 @@ class ToDoList extends React.Component<IProps,IState> {
     }
 }
 
-const mapStateToProps = (state:any) => {
+const mapStateToProps = (state: AppStateType) => {
     return {
-        toDoList: state.todolists
+        toDoLists: state.todolists.todolists
     }
 };
 
-const ConnectedToDoList = connect(mapStateToProps, {changeTask,deleteTask,deleteToDoList,changeToDoListTitle,setTasks,addNewTask})(ToDoList);
+const ConnectedToDoList = connect(mapStateToProps, {
+    changeTask,
+    deleteTask,
+    deleteToDoList,
+    changeToDoListTitle,
+    setTasks,
+    addNewTask
+})(ToDoList);
 export default ConnectedToDoList;
