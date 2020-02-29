@@ -1,4 +1,4 @@
-import {api} from "../api";
+import {api} from "../api/api";
 import {ITask, ITodoList} from "../entities/entities";
 
 export const ADD_TODOLIST = "TODOLIST/REDUCER/ADD_TODOLIST";
@@ -162,105 +162,77 @@ type TodoListReducerActionTypes = IAddToDoListAC | ISetTodoListsAC | ISetTaskAC 
     | IChangeTaskAC | IDeleteToDoListAC | IDeleteTaskAC | IChangeToDoListTitleAC;
 
 
-export const addToDoListAC = (newToDoList: ITodoList): IAddToDoListAC => ({type: ADD_TODOLIST, newToDoList});
-export const setTodoListsAC = (todolists: Array<ITodoList>): ISetTodoListsAC => ({type: SET_TODOLISTS, todolists});
-export const setTaskAC = (tasks: Array<ITask>, todolistId: string): ISetTaskAC => ({
+const addToDoListAC = (newToDoList: ITodoList): IAddToDoListAC => ({type: ADD_TODOLIST, newToDoList});
+const setTodoListsAC = (todolists: Array<ITodoList>): ISetTodoListsAC => ({type: SET_TODOLISTS, todolists});
+const setTaskAC = (tasks: Array<ITask>, todolistId: string): ISetTaskAC => ({
     type: SET_TASKS,
     tasks,
     todolistId
 });
-export const addNewTaskAC = (newTask: ITask, todolistId: string): IAddNewTaskAC => ({
+const addNewTaskAC = (newTask: ITask, todolistId: string): IAddNewTaskAC => ({
     type: ADD_TASK,
     newTask,
     todolistId
 });
-export const changeTaskAC = (newTask: ITask, todolistId: string): IChangeTaskAC => ({
+const changeTaskAC = (newTask: ITask, todolistId: string): IChangeTaskAC => ({
     type: CHANGE_TASK,
     newTask,
     todolistId
 });
-export const deleteToDoListAC = (todolistId: string): IDeleteToDoListAC => ({type: DELETE_TODOLIST, todolistId});
-export const deleteTaskAC = (todolistId: string, taskId: string): IDeleteTaskAC => ({
+const deleteToDoListAC = (todolistId: string): IDeleteToDoListAC => ({type: DELETE_TODOLIST, todolistId});
+const deleteTaskAC = (todolistId: string, taskId: string): IDeleteTaskAC => ({
     type: DELETE_TASK,
     todolistId,
     taskId
 });
-export const changeToDoListTitleAC = (todolistId: string, title: string): IChangeToDoListTitleAC => ({
+const changeToDoListTitleAC = (todolistId: string, title: string): IChangeToDoListTitleAC => ({
     type: CHANGE_TODOLIST_TITLE,
     todolistId,
     title
 });
 
 
-export const setTodoLists = () => {
-    return (dispatch: Function) => {
-        api.getToDoLists().then((totolists: Array<ITodoList>) => {
-            dispatch(setTodoListsAC(totolists.reverse()))
-        });
+export const setTodoLists = () => async (dispatch: Function) => {
+    const dataItem: Array<ITodoList> = await api.getToDoLists();
+    dispatch(setTodoListsAC(dataItem))
+};
+
+export const setTasks = (todolistId: string) => async (dispatch: Function) => {
+    const dataItem: Array<ITask> = await api.getTasks(todolistId);
+    dispatch(setTaskAC(dataItem.reverse(), todolistId))
+};
+
+export const addToDoList = (title: string) => async (dispatch: Function) => {
+    const dataItem: ITodoList = await api.addToDoList(title);
+    dispatch(addToDoListAC(dataItem))
+};
+
+export const addNewTask = (newText: string, todolistId: string) => async (dispatch: Function) => {
+    const dataItem: ITask = await api.addTask(todolistId, newText)
+    dispatch(addNewTaskAC(dataItem, todolistId))
+};
+
+export const changeTask = (task: ITask, newTask: ITask, todolistId: string) => async (dispatch: Function) => {
+    const dataItem: ITask = await api.changeTask(todolistId, task.id, newTask)
+    dispatch(changeTaskAC(dataItem, todolistId))
+};
+
+export const changeToDoListTitle = (todolistId: string, title: string) => async (dispatch: Function) => {
+    const dataItem: any = await api.changeToDoListTitle(todolistId, title);
+    dispatch(changeToDoListTitleAC(todolistId, title))
+};
+
+export const deleteToDoList = (todolistId: string) => async (dispatch: Function) => {
+    const dataItem: any = await api.deleteToDoList(todolistId);
+    if (dataItem.data.resultCode === 0) {
+        dispatch(deleteToDoListAC(todolistId))
     }
 };
 
-export const setTasks = (todolistId: string) => {
-    return (dispatch: Function) => {
-        api.getTasks(todolistId).then((tasks: Array<ITask>) => {
-            dispatch(setTaskAC(tasks.reverse(), todolistId))
-        });
-    }
-};
-
-export const addToDoList = (title: string) => {
-    return (dispatch: Function) => {
-        api.addToDoList(title).then((todolist: ITodoList) => {
-            dispatch(addToDoListAC(todolist))
-        });
-    }
-};
-
-export const addNewTask = (newText: string, todolistId: string) => {
-    return (dispatch: Function) => {
-        api.addTask(todolistId, newText)
-            .then((task: ITask) => {
-                dispatch(addNewTaskAC(task, todolistId))
-            });
-    }
-};
-
-export const changeTask = (task: ITask, newTask: ITask, todolistId: string) => {
-    return (dispatch: Function) => {
-        api.changeTask(todolistId, task.id, newTask)
-            .then((task: ITask) => {
-                dispatch(changeTaskAC(task, todolistId))
-            });
-    }
-};
-
-export const changeToDoListTitle = (todolistId: string, title: string) => {
-    return (dispatch: Function) => {
-        api.changeToDoListTitle(todolistId, title)
-            .then((res: any) => {
-                dispatch(changeToDoListTitleAC(todolistId, title))
-            });
-    }
-};
-
-export const deleteToDoList = (todolistId: string) => {
-    return (dispatch: Function) => {
-        api.deleteToDoList(todolistId)
-            .then((res: any) => {
-                if (res.data.resultCode === 0) {
-                    dispatch(deleteToDoListAC(todolistId))
-                }
-            });
-    }
-};
-
-export const deleteTask = (todolistId: string, taskId: string) => {
-    return (dispatch: Function, getState: any) => {
-        api.deleteTask(todolistId, taskId).then((res: any) => {
-            if (res.data.resultCode === 0) {
-                dispatch(deleteTaskAC(todolistId, taskId))
-            }
-        });
+export const deleteTask = (todolistId: string, taskId: string) => async (dispatch: Function, getState: any) => {
+    const dataItem: any = await api.deleteTask(todolistId, taskId);
+    if (dataItem.data.resultCode === 0) {
+        dispatch(deleteTaskAC(todolistId, taskId))
     }
 };
 

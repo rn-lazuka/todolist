@@ -1,5 +1,5 @@
 import axios from "axios";
-import {ITask} from "./entities/entities";
+import {ITask} from "../entities/entities";
 
 
 const instance = axios.create({

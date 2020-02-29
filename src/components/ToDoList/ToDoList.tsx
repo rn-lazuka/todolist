@@ -20,7 +20,6 @@ interface IProps {
     id: string
     title: string
     tasks: Array<ITask>
-
 }
 
 interface IMSTP {
@@ -127,8 +126,7 @@ class ToDoList extends React.Component<IProps & IMSTP & IMDTP, IState> {
                     <TodoListFooter changeFilter={this.changeFilter} filterValue={this.state.filterValue}/>
                 </div>
             </div>
-        )
-            ;
+        );
     }
 }
 
