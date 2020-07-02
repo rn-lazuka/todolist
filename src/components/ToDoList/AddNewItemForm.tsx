@@ -49,7 +49,7 @@ class AddNewItemForm extends React.Component<IProps, IState> {
                                error={!!this.state.error}
                                helperText={this.state.error}
                                placeholder="New item name"/>
-                    <StyledButton onClick={this.onAddItemClick}>Add</StyledButton>
+                    <StyledButton variant="contained" onClick={this.onAddItemClick}>Add</StyledButton>
                 </div>
             </div>
 
