@@ -1,47 +1,55 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, KeyboardEvent} from 'react';
 import '../../App.css';
+import {StyledButton} from '../common/AddButton';
+import TextField from '@material-ui/core/TextField';
+
 
 interface IProps {
     addTask: Function
 }
 
 interface IState {
-    error: boolean
+    error: string
     title: string
 }
 
-class AddNewItemForm extends React.Component<IProps,IState> {
+class AddNewItemForm extends React.Component<IProps, IState> {
     state = {
-        error: false,
+        error: "",
         title: ""
     };
 
+
     onChangingValue = (e: ChangeEvent<HTMLInputElement>) => {
-        this.setState({error: false, title: e.currentTarget.value})
+        this.setState({error: "", title: e.currentTarget.value})
     };
     onAddItemClick = () => {
         let newText = this.state.title;
         this.setState({title: ''});
         if (newText === "") {
-            this.setState({error: true})
+            this.setState({error: "Field is required"})
         } else {
-            this.setState({error: false});
+            this.setState({error: ""});
             this.props.addTask(newText);
         }
     };
-    onEnterPress = (e: KeyboardEventInit) => {
+    onEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             this.onAddItemClick();
         }
     };
     render = () => {
-        let classForInput = this.state.error ? "error" : "";
         return (
             <div>
                 <div className="todoList-newTaskForm">
-                    <input onKeyPress={this.onEnterPress} onChange={this.onChangingValue} className={classForInput}
-                           value={this.state.title} type="text" placeholder="New item name"/>
-                    <button onClick={this.onAddItemClick}>Add</button>
+                    <TextField variant="outlined"
+                               value={this.state.title}
+                               onChange={this.onChangingValue}
+                               onKeyPress={this.onEnterPress}
+                               error={!!this.state.error}
+                               helperText={this.state.error}
+                               placeholder="New item name"/>
+                    <StyledButton onClick={this.onAddItemClick}>Add</StyledButton>
                 </div>
             </div>
 

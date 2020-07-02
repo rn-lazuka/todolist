@@ -1,4 +1,4 @@
-import {api} from "../api/api";
+import {api, ResultCodeEnum} from "../api/api";
 import {ITask, ITodoList} from "../entities/entities";
 
 export const ADD_TODOLIST = "TODOLIST/REDUCER/ADD_TODOLIST";
@@ -25,7 +25,7 @@ export const reducer = (state: IInitialState = initialState, action: TodoListRed
         case ADD_TODOLIST:
             return {
                 ...state,
-                todolists: [...state.todolists, action.newToDoList],
+                todolists: [action.newToDoList,...state.todolists],
             };
         case SET_TODOLISTS:
             return {
@@ -33,7 +33,7 @@ export const reducer = (state: IInitialState = initialState, action: TodoListRed
                 todolists: action.todolists.map((tl: ITodoList) => ({...tl, tasks: []}))
             };
         case SET_TASKS:
-            return {
+            return {  
                 ...state,
                 todolists: state.todolists.map((tl: ITodoList) => {
                     if (tl.id === action.todolistId) {
@@ -193,8 +193,11 @@ const changeToDoListTitleAC = (todolistId: string, title: string): IChangeToDoLi
 
 
 export const setTodoLists = () => async (dispatch: Function) => {
-    const dataItem: Array<ITodoList> = await api.getToDoLists();
-    dispatch(setTodoListsAC(dataItem))
+    const loginSucces= await api.login('rn.lazuka@gmail.com', '55555Ws', true)
+    if (loginSucces.resultCode === ResultCodeEnum.Success) {
+        const dataItem: Array<ITodoList> = await api.getToDoLists();
+        dispatch(setTodoListsAC(dataItem))
+    }
 };
 
 export const setTasks = (todolistId: string) => async (dispatch: Function) => {

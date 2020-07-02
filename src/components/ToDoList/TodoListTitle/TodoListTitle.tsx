@@ -1,18 +1,21 @@
 import React, {ChangeEvent} from 'react';
 import '../../../App.css';
+import IconButton from '@material-ui/core/IconButton';
+import {Delete} from '@material-ui/icons';
 
 interface IProps {
     changeToDoListTitle: (title: string) => void
     deleteToDoList: () => void
     title: string
 }
+
 interface IState {
     title: string
     editMode: boolean
     classForInput: string
 }
 
-class TodoListTitle extends React.Component<IProps,IState> {
+class TodoListTitle extends React.Component<IProps, IState> {
     state = {
         title: this.props.title,
         editMode: false,
@@ -46,7 +49,7 @@ class TodoListTitle extends React.Component<IProps,IState> {
                     <h3 className="todoList-header__title" onClick={this.activateEditMode}>{this.state.title}
                     </h3>
                 }
-                <button onClick={this.props.deleteToDoList}>X</button>
+                <IconButton onClick={this.props.deleteToDoList}><Delete/></IconButton>
             </div>
         )
     }

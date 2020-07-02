@@ -1,6 +1,9 @@
 import React, {ChangeEvent} from 'react';
 import '../../../../App.css';
 import {ITask} from '../../../../entities/entities';
+import TextField from '@material-ui/core/TextField';
+import {Delete} from '@material-ui/icons';
+import IconButton from '@material-ui/core/IconButton';
 
 interface IProps {
     deleteTask:(id:string)=>void
@@ -49,10 +52,15 @@ class TodoListTask extends React.Component<IProps,IState> {
             <div className={classForTask}>
                 <input type="checkbox" checked={this.props.task.status===2} onChange={this.onIsDoneChanged}/>
                 {this.state.editMode
-                ?<input className={this.state.classForInput} onChange={this.onTitleChanged} onBlur={this.deactivateEditMode} autoFocus={true} value={this.state.title}/>
+                ? <TextField variant="outlined"
+                             value={this.state.title}
+                             onChange={this.onTitleChanged}
+                             onBlur={this.deactivateEditMode}
+                             autoFocus={true}
+                             className={this.state.classForInput}
+                    />
                 :<span onClick={this.activateEditMode}>{this.props.task.id} -{this.props.task.title}</span>}
-                <span>, priority: {this.props.task.priority}</span>
-                <button onClick={this.deleteTask}>X</button>
+                <IconButton onClick={this.deleteTask}><Delete/></IconButton>
             </div>
 
         );
